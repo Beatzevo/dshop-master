@@ -1,0 +1,71 @@
+{
+  "name": "root",
+  "private": true,
+  "dependencies": {
+    "lerna": "3.22.1"
+  },
+  "workspaces": {
+    "packages": [
+      "shop",
+      "backend",
+      "packages/**"
+    ],
+    "nohoist": [
+      "**/openzeppelin-solidity"
+    ]
+  },
+  "devDependencies": {
+    "@google-cloud/storage": "5.3.0",
+    "@pinata/sdk": "1.1.11",
+    "babel-eslint": "10.1.0",
+    "commander": "6.1.0",
+    "eslint": "7.11.0",
+    "eslint-config-standard": "14.1.1",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-react": "7.21.4",
+    "eslint-plugin-standard": "4.0.1",
+    "husky": "4.3.0",
+    "mocha": "8.1.3",
+    "prettier": "2.1.2"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap --no-ci --progress",
+    "build": "lerna run build",
+    "clean": "git clean -fdX .",
+    "start": "lerna run start --scope @origin/shop --stream --no-prefix",
+    "lint": "lerna run lint",
+    "format": "eslint **/**/*.js --quiet --fix",
+    "test": "node scripts/test.js",
+    "package-diffs": "find . -maxdepth 3 -name package.json -type f | grep -v node_modules | node scripts/package-versions.js",
+    "postinstall": "lerna run migrate --scope @origin/shop-backend --stream --no-prefix && mkdir -p shop/public/dist && cp node_modules/openpgp/dist/openpgp.min.js node_modules/openpgp/dist/openpgp.worker.min.js shop/public/dist"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "lerna run lint"
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "proseWrap": "always",
+    "trailingComma": "none"
+  },
+  "renovate": {
+    "extends": [
+      "config:base"
+    ],
+    "groupName": "all",
+    "ignoreDeps": [
+      "openzeppelin-solidity",
+      "truffle",
+      "solc",
+      "sequelize",
+      "sequelize-cli",
+      "ipfs"
+    ],
+    "ignorePaths": [],
+    "schedule": "before 11am",
+    "rebaseStalePrs": false
+  }
+}
